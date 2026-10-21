@@ -19,6 +19,18 @@ export default function SendMoneyModal({ open, onClose, initialRecipient = "" })
   useEffect(() => {
     if (open) { setRecipient(initialRecipient || ""); setSearch(initialRecipient || ""); setStep("recipient"); setError(""); }
   }, [open, initialRecipient]);
+
+  useEffect(() => {
+    const handlePrefillAmount = (event) => {
+      const value = event.detail;
+      setAmount(value == null ? "" : String(value));
+      setError("");
+    };
+
+    window.addEventListener("upay:prefill-send-amount", handlePrefillAmount);
+    return () => window.removeEventListener("upay:prefill-send-amount", handlePrefillAmount);
+  }, []);
+
   const matches = useMemo(() => contacts.filter((contact) =>
     `${contact.name} ${contact.phone} ${contact.upiId}`.toLowerCase().includes(search.toLowerCase())
   ), [search]);
@@ -31,12 +43,21 @@ export default function SendMoneyModal({ open, onClose, initialRecipient = "" })
   };
   const submit = (event) => {
     event.preventDefault();
+
+    const value = Number(amount);
+    if (!amount.trim() || !Number.isFinite(value) || value <= 0) {
+      setError("Enter a valid amount.");
+      return;
+    }
+
     try {
       sendMoney({ person: recipient, amount, note });
       setSuccessAmount(Number(amount));
       setStep("success");
       setError("");
-    } catch (err) { setError(err.message); }
+    } catch (err) {
+      setError(/insufficient/i.test(err?.message || "") ? "Insufficient balance" : (err?.message || "Payment could not be completed."));
+    }
   };
   const close = () => {
     setStep("recipient"); setRecipient(""); setSearch(""); setAmount(""); setNote(""); setError(""); onClose();
@@ -54,9 +75,9 @@ export default function SendMoneyModal({ open, onClose, initialRecipient = "" })
         <div className="manual-recipient"><label>Or continue with entered details</label><button className="primary-button full-button" onClick={continueToAmount}>Continue</button></div>
         {error && <p className="form-error">{error}</p>}
       </div>}
-      {step === "amount" && <form className="send-modal-body amount-form" onSubmit={submit}>
+      {step === "amount" && <form className="send-modal-body amount-form" onSubmit={submit} noValidate>
         <div className="paying-to"><PersonAvatar name={recipient}/><div><span>Paying to</span><strong>{recipient}</strong></div></div>
-        <label className="amount-input-wrap"><span>₹</span><input autoFocus type="number" min="1" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0" required/><small>INR</small></label>
+        <label className="amount-input-wrap"><span>₹</span><input autoFocus type="number" step="0.01" value={amount} onChange={(e) => { setAmount(e.target.value); setError(""); }} placeholder="0" /><small>INR</small></label>
         <p className="available-balance">Available demo balance: <strong>{formatMoney(profile.balance)}</strong></p>
         <label className="field-label">Add a note (optional)<input value={note} onChange={(e) => setNote(e.target.value)} placeholder="What's this for?"/></label>
         {error && <p className="form-error">{error}</p>}

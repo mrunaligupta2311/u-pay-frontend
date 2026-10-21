@@ -120,3 +120,11 @@
   .upi-review-amount { font-size: 30px; }
   .upi-result-card { padding: 28px 17px; }
 }
+
+/* Keep the QR scanner immediately visible when the UPI page opens. */
+.upi-page { display: flex; flex-direction: column; }
+.upi-page > .qr-scanner-card { order: 0; }
+.upi-page > .upi-hero { order: 1; }
+.upi-page > .upi-section-heading { order: 2; }
+.upi-page > .upi-how-card { order: 3; }
+.upi-page > .upi-demo-note { order: 4; }

@@ -116,7 +116,7 @@ export default function UpiPage() {
       return;
     }
     if (value > Number(profile.balance)) {
-      setError("Your demo wallet balance is insufficient for this amount.");
+      setError("Insufficient balance");
       return;
     }
     setError("");
@@ -138,7 +138,7 @@ export default function UpiPage() {
       return;
     }
     if (value > Number(profile.balance)) {
-      setError("Your demo balance is insufficient. Add demo funds from the Balance page.");
+      setError("Insufficient balance");
       setStep("review");
       return;
     }
@@ -157,7 +157,7 @@ export default function UpiPage() {
         setTransaction(result);
         setStep("success");
       } catch (err) {
-        setError(err.message || "Demo payment could not be completed.");
+        setError(/insufficient/i.test(err?.message || "") ? "Insufficient balance" : (err?.message || "Demo payment could not be completed."));
         setStep("failure");
       } finally {
         setProcessing(false);
@@ -201,7 +201,7 @@ export default function UpiPage() {
             <span className="step-badge">01 / 03</span>
           </section>
 
-          <QRScanner onResult={handleQrResult} />
+          <QRScanner onResult={handleQrResult} autoStart />
 
           <section className="upi-how-card">
             <div className="upi-how-icon"><ShieldCheck size={20} /></div>
@@ -241,20 +241,20 @@ export default function UpiPage() {
             <span>A readable UPI ID is not proof of the recipient's identity. Verify the details independently before paying.</span>
           </div>
 
-          <form className="upi-amount-form" onSubmit={continueToReview}>
+          <form className="upi-amount-form" onSubmit={continueToReview} noValidate>
             <label htmlFor="upi-amount">Amount to pay</label>
             <div className="upi-amount-input">
               <span>₹</span>
               <input
                 id="upi-amount"
                 type="number"
-                min="1"
-                max={profile.balance}
                 step="0.01"
                 placeholder="0"
                 value={amount}
-                onChange={(event) => setAmount(event.target.value)}
-                required
+                onChange={(event) => {
+                  setAmount(event.target.value);
+                  setError("");
+                }}
               />
               <small>INR</small>
             </div>

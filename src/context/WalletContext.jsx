@@ -41,7 +41,7 @@ export function WalletProvider({ children }) {
     if (!person?.trim()) throw new Error("Enter a recipient name or UPI ID.");
     if (!Number.isFinite(value) || value <= 0) throw new Error("Enter a valid amount.");
     if (!wallet.profile.bankLinked) throw new Error("Add a bank account before sending money.");
-    if (value > wallet.profile.balance) throw new Error("Insufficient demo balance.");
+    if (value > wallet.profile.balance) throw new Error("Insufficient balance");
     const transaction = {
       id: `tx-${Date.now()}`,
       person: person.trim(),

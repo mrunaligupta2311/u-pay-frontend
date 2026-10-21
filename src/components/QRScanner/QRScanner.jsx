@@ -3,9 +3,10 @@ import { Html5Qrcode } from "html5-qrcode";
 import { Camera, CheckCircle2, ImagePlus, Lightbulb, LightbulbOff, RefreshCw, UploadCloud } from "lucide-react";
 import "./QRScanner.css";
 
-export default function QRScanner({ onResult }) {
+export default function QRScanner({ onResult, autoStart = false }) {
   const scannerRef = useRef(null);
   const fileRef = useRef(null);
+  const startScannerRef = useRef(null);
   const [running, setRunning] = useState(false);
   const [torchOn, setTorchOn] = useState(false);
   const [error, setError] = useState("");
@@ -51,6 +52,18 @@ export default function QRScanner({ onResult }) {
       setRunning(false);
     }
   };
+
+  startScannerRef.current = startScanner;
+
+  useEffect(() => {
+    if (!autoStart) return undefined;
+
+    const timer = window.setTimeout(() => {
+      startScannerRef.current?.();
+    }, 250);
+
+    return () => window.clearTimeout(timer);
+  }, [autoStart]);
 
   const stopScanner = async () => {
     if (scannerRef.current?.isScanning) await scannerRef.current.stop().catch(() => {});
