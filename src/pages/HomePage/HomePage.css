@@ -36,3 +36,127 @@
 .person-detail-empty{padding:25px 10px;text-align:center;color:var(--muted);font-size:12px}
 .person-detail-empty p{font-size:10px;line-height:1.6}
 @media(max-width:520px){.person-detail-backdrop{align-items:flex-end;padding:0}.person-detail-modal{width:100%;max-height:88dvh;border-radius:25px 25px 0 0}.person-detail-header{padding:15px 18px}.person-detail-transactions{padding:0 17px 18px}}
+
+
+/* Person payment-history screen: polished, GPay-inspired contact view */
+.person-detail-backdrop {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.person-detail-modal {
+  width: min(100%, 500px);
+  max-height: min(900px, 92dvh);
+  border-radius: 24px;
+  overscroll-behavior: contain;
+}
+
+.person-detail-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #fff;
+}
+
+.person-detail-identity {
+  padding: 28px 22px 18px;
+}
+
+.person-detail-identity h2 {
+  margin-top: 14px;
+  font-size: 23px;
+}
+
+.person-detail-identity p {
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+.person-detail-actions {
+  padding-bottom: 23px;
+}
+
+.person-detail-history-heading {
+  position: sticky;
+  top: 72px;
+  z-index: 1;
+  background: #fff;
+}
+
+.person-detail-history-heading p {
+  line-height: 1.5;
+}
+
+.person-detail-transactions {
+  padding-bottom: 24px;
+}
+
+.person-detail-transaction {
+  gap: 12px;
+  padding: 15px 0;
+}
+
+.person-detail-transaction-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+}
+
+.person-detail-transaction-copy > strong {
+  font-size: 12px;
+}
+
+.person-detail-transaction-copy > small {
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.person-detail-transaction > strong {
+  font-size: 11px;
+}
+
+.person-detail-empty {
+  padding: 32px 12px;
+}
+
+.person-detail-empty > span {
+  display: block;
+  color: var(--ink);
+  font-weight: 750;
+}
+
+.person-detail-empty p {
+  margin-bottom: 0;
+}
+
+@media (max-width: 520px) {
+  .person-detail-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .person-detail-modal {
+    width: 100%;
+    max-height: 92dvh;
+    border-radius: 25px 25px 0 0;
+  }
+
+  .person-detail-header {
+    padding: 15px 18px;
+  }
+
+  .person-detail-identity {
+    padding-top: 24px;
+  }
+
+  .person-detail-history-heading {
+    top: 66px;
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .person-detail-transactions {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+}
