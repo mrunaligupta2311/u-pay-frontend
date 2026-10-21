@@ -1,0 +1,122 @@
+.upi-page { display: grid; gap: 22px; max-width: 760px; margin: 0 auto; }
+.upi-hero {
+  min-height: 242px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  overflow: hidden;
+  padding: 27px 30px;
+  border: 1px solid #e3e7ff;
+  border-radius: 26px;
+  background: linear-gradient(115deg, #edf0ff 0%, #f8f6ff 53%, #fff0f7 100%);
+}
+.upi-hero-copy { position: relative; z-index: 2; max-width: 410px; }
+.upi-kicker { display: inline-flex; align-items: center; gap: 7px; color: var(--pink-dark); font-size: 9px; font-weight: 850; letter-spacing: 1.5px; }
+.upi-hero h1 { margin: 12px 0 10px; font-family: Manrope, sans-serif; font-size: clamp(32px, 5vw, 45px); line-height: 1.02; letter-spacing: -2px; }
+.upi-hero h1 span { color: var(--pink); }
+.upi-hero-copy > p { max-width: 350px; margin: 0; color: #727b94; font-size: 12px; line-height: 1.7; }
+.upi-trust-points { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 17px; }
+.upi-trust-points span { display: inline-flex; align-items: center; gap: 5px; color: #4e5e91; font-size: 9px; font-weight: 750; }
+.upi-trust-points svg { color: var(--blue); }
+.upi-hero-art { position: relative; flex: 0 0 180px; height: 180px; display: grid; place-items: center; }
+.upi-art-orbit { position: absolute; border: 1px solid #8e9bfa5e; border-radius: 50%; }
+.orbit-one { width: 154px; height: 154px; }
+.orbit-two { width: 180px; height: 180px; border-color: #ef9bcb65; }
+.upi-art-card { position: relative; z-index: 1; width: 105px; height: 118px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; border: 1px solid #ffffff; border-radius: 20px; background: #ffffffd9; color: var(--blue); box-shadow: 0 14px 40px #5364c51c; transform: rotate(5deg); }
+.upi-art-card span { color: #69738f; font-size: 9px; font-weight: 800; }
+.upi-art-dot { position: absolute; z-index: 2; width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 3px 8px #252d5020; }
+.dot-blue { top: 18px; right: 27px; background: var(--blue); }
+.dot-pink { bottom: 17px; left: 20px; background: var(--pink); }
+.upi-art-spark { position: absolute; top: 34px; left: 9px; color: var(--pink); font-size: 25px; }
+.upi-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.upi-section-heading h2, .upi-flow-card h2, .upi-result-card h2 { margin: 6px 0; font-family: Manrope, sans-serif; font-size: 23px; letter-spacing: -.8px; }
+.upi-section-heading p, .upi-flow-subtitle { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.step-badge { padding: 8px 10px; border-radius: 10px; background: var(--blue-soft); color: var(--blue); font-size: 10px; font-weight: 850; white-space: nowrap; }
+.upi-how-card { display: flex; align-items: flex-start; gap: 13px; padding: 17px; border: 1px solid #e4e7ff; border-radius: 17px; background: linear-gradient(110deg, #f4f5ff, #fff7fb); }
+.upi-how-icon { width: 40px; height: 40px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 13px; background: white; color: var(--blue); box-shadow: 0 4px 12px #303d7410; }
+.upi-how-card strong { display: block; margin: 2px 0 5px; font-size: 12px; }
+.upi-how-card p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.65; }
+.upi-demo-note { display: flex; align-items: flex-start; gap: 10px; padding: 13px 15px; border: 1px solid #f5d9e8; border-radius: 14px; background: #fff7fb; color: var(--pink-dark); }
+.upi-demo-note p { margin: 0; }
+.upi-demo-note strong, .upi-demo-note span { display: block; }
+.upi-demo-note strong { font-size: 11px; }
+.upi-demo-note span { margin-top: 4px; color: #8d7184; font-size: 10px; line-height: 1.55; }
+.upi-flow-card { padding: 23px; border: 1px solid var(--line); border-radius: 23px; background: white; box-shadow: var(--shadow-soft); }
+.upi-back-link { display: inline-flex; align-items: center; gap: 7px; margin: 0 0 20px; padding: 0; border: 0; background: transparent; color: #68728a; font-size: 11px; font-weight: 750; cursor: pointer; }
+.upi-flow-progress { display: flex; gap: 6px; margin: 0 0 23px; }
+.upi-flow-progress span { height: 4px; flex: 1; border-radius: 10px; background: #eceef5; }
+.upi-flow-progress span.active { background: linear-gradient(90deg, var(--blue), var(--pink)); }
+.upi-flow-card h2 { margin-top: 8px; }
+.upi-flow-subtitle { margin-bottom: 20px; }
+.upi-recipient-card { display: flex; align-items: center; gap: 13px; padding: 15px; border: 1px solid #e7e9ff; border-radius: 17px; background: linear-gradient(110deg, #f7f8ff, #fff8fc); }
+.upi-recipient-info { min-width: 0; flex: 1; }
+.upi-recipient-info strong, .upi-recipient-info span, .upi-recipient-info small { display: block; overflow-wrap: anywhere; }
+.upi-recipient-info strong { font-size: 14px; }
+.upi-recipient-info span { margin-top: 5px; color: var(--blue); font-size: 11px; font-weight: 750; }
+.upi-recipient-info small { display: flex; align-items: center; gap: 5px; margin-top: 5px; color: var(--muted); font-size: 10px; }
+.upi-recipient-badge { flex: 0 0 auto; color: var(--pink); }
+.upi-verified-note { display: flex; align-items: flex-start; gap: 8px; margin: 13px 0 22px; color: #9a6381; font-size: 10px; line-height: 1.6; }
+.upi-verified-note svg { flex: 0 0 auto; color: var(--pink); }
+.upi-amount-form > label, .upi-pin-label { display: flex; align-items: center; gap: 6px; margin: 17px 0 9px; color: #424d68; font-size: 11px; font-weight: 800; }
+.upi-amount-input { display: flex; align-items: center; gap: 10px; padding: 7px 0 12px; border-bottom: 1px solid #dfe3ef; }
+.upi-amount-input > span { color: var(--blue); font-size: 31px; font-weight: 750; }
+.upi-amount-input input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 38px; font-weight: 800; letter-spacing: -1.3px; }
+.upi-amount-input input::placeholder { color: #c7cbda; }
+.upi-amount-input small { color: var(--muted); font-size: 10px; }
+.upi-qr-amount { margin: 9px 0 0; color: var(--pink-dark); font-size: 10px; }
+.upi-note-label span { margin-left: auto; color: #9ba1b1; font-size: 10px; font-weight: 500; }
+.upi-amount-form > input { width: 100%; height: 46px; padding: 0 13px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); font-size: 12px; }
+.upi-available-balance { display: flex; align-items: center; gap: 8px; margin: 19px 0; padding: 13px; border-radius: 12px; background: #f7f8fd; color: var(--muted); font-size: 10px; }
+.upi-available-balance svg { color: var(--blue); }
+.upi-available-balance strong { margin-left: auto; color: var(--ink); font-size: 11px; }
+.upi-form-error, .upi-scan-error { display: flex; align-items: flex-start; gap: 8px; margin: 13px 0; padding: 11px 12px; border-radius: 11px; background: #fff0f1; color: #b52e47; font-size: 11px; line-height: 1.5; }
+.upi-form-error svg, .upi-scan-error svg { flex: 0 0 auto; }
+.upi-review-amount { padding: 22px 12px; border-radius: 17px; background: linear-gradient(110deg, var(--blue-soft), var(--pink-soft)); color: var(--blue); text-align: center; font-size: 34px; font-weight: 850; letter-spacing: -1px; }
+.upi-review-amount span { display: block; margin-top: 5px; color: #858ba2; font-size: 10px; font-weight: 600; letter-spacing: 0; }
+.upi-review-list { margin: 16px 0; }
+.upi-review-list > div, .upi-receipt > div { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 12px 0; border-bottom: 1px solid #f0f1f6; }
+.upi-review-list > div span, .upi-receipt > div span { color: var(--muted); font-size: 10px; }
+.upi-review-list > div strong, .upi-receipt > div strong { max-width: 65%; color: var(--ink); font-size: 11px; text-align: right; overflow-wrap: anywhere; }
+.upi-review-warning { display: flex; align-items: flex-start; gap: 9px; margin: 18px 0; padding: 12px; border: 1px solid #f5d7e7; border-radius: 12px; background: #fff7fb; color: #8d7184; font-size: 10px; line-height: 1.6; }
+.upi-review-warning svg { flex: 0 0 auto; color: var(--pink); }
+.upi-authorize-card { text-align: center; }
+.upi-authorize-card .upi-back-link { display: flex; width: fit-content; }
+.upi-auth-icon { width: 65px; height: 65px; display: grid; place-items: center; margin: 4px auto 17px; border-radius: 22px; background: linear-gradient(135deg, var(--blue-soft), var(--pink-soft)); color: var(--blue); }
+.upi-authorize-card .upi-flow-subtitle { max-width: 380px; margin: 0 auto 20px; }
+.upi-auth-payee { display: flex; align-items: center; gap: 9px; padding: 13px; margin: 16px 0; border: 1px solid var(--line); border-radius: 13px; text-align: left; }
+.upi-auth-payee svg { color: var(--pink); }
+.upi-auth-payee span { flex: 1; font-size: 11px; font-weight: 750; }
+.upi-auth-payee strong { font-size: 12px; }
+.upi-pin-label { justify-content: center; }
+.upi-pin-input { width: 150px; height: 55px; margin: 4px auto 19px; display: block; border: 1px solid #dfe3ef; border-radius: 14px; text-align: center; font-size: 24px; letter-spacing: 8px; }
+.upi-demo-disclaimer { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 15px 0 0; color: #9b7288; font-size: 9px; line-height: 1.5; }
+.upi-result-card { padding: 35px 24px; border: 1px solid var(--line); border-radius: 23px; background: white; text-align: center; box-shadow: var(--shadow-soft); }
+.upi-result-card > svg { margin-bottom: 18px; color: var(--blue); }
+.upi-result-card h2 { margin: 8px 0; }
+.upi-result-card > p { max-width: 390px; margin: 0 auto 21px; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.upi-result-card.is-success > svg { color: #12a875; }
+.upi-result-card.is-failure > svg { color: var(--pink); }
+.upi-receipt { margin: 22px 0; padding: 0 15px; border: 1px solid var(--line); border-radius: 14px; text-align: left; }
+.upi-receipt-status { color: var(--pink-dark) !important; }
+.upi-result-card .primary-button { margin-top: 8px; }
+.upi-processing-spinner { width: 48px; height: 48px; margin: 0 auto 20px; border: 4px solid #e9eaff; border-top-color: var(--pink); border-radius: 50%; animation: upi-spin .8s linear infinite; }
+@keyframes upi-spin { to { transform: rotate(360deg); } }
+.upi-scan-error { align-items: center; }
+.upi-scan-error span { flex: 1; }
+.upi-scan-error button { display: grid; place-items: center; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }
+@media (max-width: 540px) {
+  .upi-page { gap: 18px; }
+  .upi-hero { min-height: 205px; padding: 21px 18px; border-radius: 22px; }
+  .upi-hero h1 { font-size: 34px; }
+  .upi-hero-copy > p { max-width: 250px; font-size: 11px; }
+  .upi-hero-art { flex-basis: 90px; width: 90px; height: 120px; margin-right: -9px; transform: scale(.73); transform-origin: center right; }
+  .upi-trust-points { gap: 7px; }
+  .upi-trust-points span { font-size: 8px; }
+  .upi-section-heading h2, .upi-flow-card h2, .upi-result-card h2 { font-size: 21px; }
+  .upi-section-heading p { max-width: 255px; }
+  .upi-flow-card { padding: 19px 16px; border-radius: 20px; }
+  .upi-review-amount { font-size: 30px; }
+  .upi-result-card { padding: 28px 17px; }
+}

@@ -1,0 +1,155 @@
+.app-shell {
+  min-height: 100vh;
+  padding-bottom: calc(84px + env(safe-area-inset-bottom));
+}
+
+.app-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 72px;
+  padding: 0 max(22px, calc((100vw - 1120px) / 2));
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255, 255, 255, .96);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+}
+
+.app-brand-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.brand-mark {
+  display: grid;
+  width: 37px;
+  height: 37px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e8f0fe;
+  color: #1a73e8;
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.brand-mark span {
+  color: #34a853;
+}
+
+.app-brand-name {
+  color: #202124;
+  font-size: 17px;
+  font-weight: 850;
+  letter-spacing: -.7px;
+}
+
+.topbar-title {
+  margin-left: 10px;
+  padding-left: 18px;
+  border-left: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.app-user-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-left: auto;
+  padding: 5px 8px;
+  border: 1px solid transparent;
+  border-radius: 30px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.app-user-chip:hover {
+  border-color: #e5eaf3;
+  background: #f8faff;
+}
+
+.app-user-avatar {
+  display: grid;
+  width: 33px;
+  height: 33px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: #e8f0fe;
+  color: #1a73e8;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.app-user-name {
+  max-width: 110px;
+  overflow: hidden;
+  color: #586176;
+  font-size: 11px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 28px 24px 36px;
+}
+
+@media (max-width: 600px) {
+  .app-topbar {
+    height: 62px;
+    gap: 8px;
+    padding: 0 12px;
+  }
+
+  .brand-mark {
+    width: 33px;
+    height: 33px;
+    font-size: 24px;
+  }
+
+  .app-brand-button {
+    gap: 7px;
+  }
+
+  .app-brand-name {
+    font-size: 15px;
+  }
+
+  .topbar-title {
+    margin-left: 2px;
+    padding-left: 9px;
+    font-size: 11px;
+  }
+
+  .app-user-chip {
+    gap: 0;
+    padding: 3px;
+  }
+
+  .app-user-avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .app-user-name {
+    display: none;
+  }
+
+  .app-main {
+    padding: 20px 16px 26px;
+  }
+}
