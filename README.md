@@ -1,4 +1,4 @@
-# Paywise — UPI Wallet Frontend Demo
+# U-Pay — UPI Wallet Frontend Demo
 
 A mobile-first React + Vite frontend prototype inspired by common UPI wallet flows. It uses dummy data only and does **not** move real money.
 
