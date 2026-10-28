@@ -128,3 +128,32 @@
 .upi-page > .upi-section-heading { order: 2; }
 .upi-page > .upi-how-card { order: 3; }
 .upi-page > .upi-demo-note { order: 4; }
+
+
+/* PIN authorization and async payment states */
+.upi-pin-input {
+  display: block;
+  padding: 0 12px;
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+}
+.upi-pin-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px #3458e615;
+}
+.upi-pin-input:disabled {
+  opacity: .65;
+}
+.upi-authorize-card form .primary-button {
+  margin-top: 12px;
+}
+.upi-authorize-card .upi-form-error {
+  text-align: left;
+}
+.upi-authorize-card .primary-button:disabled,
+.upi-flow-card .primary-button:disabled {
+  opacity: .65;
+  cursor: not-allowed;
+  transform: none;
+}

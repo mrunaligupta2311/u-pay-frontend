@@ -37,7 +37,7 @@ export default function HomePage() {
   return <div className="home-page page-enter">
     <section className="home-welcome">
       <div><div className="welcome-kicker"><Sparkles size={13}/> YOUR EVERYDAY PAYMENTS</div><h1>Good afternoon,<br/><span>{profile.name.split(" ")[0]}.</span></h1><p>Money moves better when it's simple.</p></div>
-      <div className="balance-peek"><span>Demo balance</span><strong>{profile.bankLinked ? formatMoney(profile.balance) : "Account removed"}</strong><button onClick={() => navigate("/balance")}>View balance <ArrowRight size={14}/></button></div>
+      <div className="balance-peek"><span>Wallet balance</span><strong>{formatMoney(profile.balance)}</strong><button onClick={() => navigate("/balance")}>View balance <ArrowRight size={14}/></button></div>
     </section>
 
     <section className="home-search-section">
@@ -57,10 +57,10 @@ export default function HomePage() {
     </section>
 
     <section className="home-history-section">
-      <SectionHeading title="Recent transactions" subtitle="Latest activity on this demo wallet" action={<button className="text-link" onClick={() => navigate("/history")}>See all <ArrowRight size={14}/></button>}/>
+      <SectionHeading title="Recent transactions" subtitle="Recent wallet activity" action={<button className="text-link" onClick={() => navigate("/history")}>See all <ArrowRight size={14}/></button>}/>
       <div className="home-transaction-card">{transactions.slice(0, 5).map((transaction, index) => <TransactionItem key={transaction.id} transaction={transaction} index={index} onClick={() => navigate("/history")}/>)}{transactions.length === 0 && <p className="empty-state">No transactions yet.</p>}</div>
     </section>
-    <p className="home-disclaimer">u-pay is a frontend demo. All transactions are simulated; no real money is moved.</p>
+    <p className="home-disclaimer">Transactions are simulated. No real money is transferred.</p>
     <SendMoneyModal open={sendOpen} initialRecipient={recipient} onClose={() => setSendOpen(false)}/>
     <MyQrModal open={qrOpen} onClose={() => setQrOpen(false)}/>
 

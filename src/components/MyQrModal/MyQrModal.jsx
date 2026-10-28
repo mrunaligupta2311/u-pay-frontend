@@ -18,11 +18,11 @@ export default function MyQrModal({ open, onClose }) {
   return <div className="my-qr-backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
     <section className="my-qr-modal" role="dialog" aria-modal="true" aria-label="My QR code">
       <button className="my-qr-close" onClick={onClose} aria-label="Close"><X size={20}/></button>
-      <div className="my-qr-heading"><span className="eyebrow">RECEIVE MONEY</span><h2>Your UPI QR</h2><p>Let someone scan this code to identify your demo UPI ID.</p></div>
+      <div className="my-qr-heading"><span className="eyebrow">RECEIVE MONEY</span><h2>Your UPI QR</h2><p>Let someone scan this code to identify your UPI ID.</p></div>
       <div className="my-qr-canvas" ref={canvasRef}><QRCodeCanvas value={`upi://pay?pa=${profile.upiId}&pn=${encodeURIComponent(profile.name)}&cu=INR`} size={220} level="H" includeMargin /></div>
       <strong className="my-qr-name">{profile.name}</strong><span className="my-qr-id">{profile.upiId}</span>
       <button className="primary-button full-button" onClick={download}><Download size={17}/> Download QR</button>
-      <small className="my-qr-note">Demo QR only. It does not initiate real payments.</small>
+      <small className="my-qr-note">This QR identifies your UPI ID only. Real payments are not enabled.</small>
     </section>
   </div>;
 }

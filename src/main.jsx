@@ -1,19 +1,19 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { WalletProvider } from "./context/WalletContext";
 import { AuthProvider } from "./context/AuthContext";
+import { WalletProvider } from "./context/WalletContext";
 import App from "./App";
 import "./styles/global.css";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
-      <WalletProvider>
-        <AuthProvider>
+      <AuthProvider>
+        <WalletProvider>
           <App />
-        </AuthProvider>
-      </WalletProvider>
+        </WalletProvider>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

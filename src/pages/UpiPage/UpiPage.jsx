@@ -68,6 +68,7 @@ export default function UpiPage() {
   const [payment, setPayment] = useState(null);
   const [step, setStep] = useState("scan");
   const [amount, setAmount] = useState("");
+  const [pin, setPin] = useState("");
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
   const [transaction, setTransaction] = useState(null);
@@ -97,6 +98,7 @@ export default function UpiPage() {
     setStep("scan");
     setPayment(null);
     setAmount("");
+    setPin("");
     setNote("");
     setError("");
     setTransaction(null);
@@ -111,10 +113,6 @@ export default function UpiPage() {
       setError("Enter a valid payment amount.");
       return;
     }
-    if (!profile.bankLinked) {
-      setError("Link a bank account from the Balance page before continuing.");
-      return;
-    }
     if (value > Number(profile.balance)) {
       setError("Insufficient balance");
       return;
@@ -123,20 +121,24 @@ export default function UpiPage() {
     setStep("review");
   };
 
-  const confirmPayment = () => {
-    if (!payment) return;
+  const confirmPayment = async (event) => {
+    event?.preventDefault();
+
+    if (processing || !payment) return;
+
+    if (!/^\d{4,6}$/.test(pin)) {
+      setError("Enter your 4–6 digit Transaction PIN.");
+      return;
+    }
 
     const value = Number(amount);
+
     if (!Number.isFinite(value) || value <= 0) {
       setError("Enter a valid payment amount.");
       setStep("review");
       return;
     }
-    if (!profile.bankLinked) {
-      setError("Add a demo bank account before continuing.");
-      setStep("review");
-      return;
-    }
+
     if (value > Number(profile.balance)) {
       setError("Insufficient balance");
       setStep("review");
@@ -147,22 +149,48 @@ export default function UpiPage() {
     setError("");
     setStep("processing");
 
-    window.setTimeout(() => {
-      try {
-        const result = sendMoney({
-          person: payment.name || payment.upiId,
-          amount,
-          note: note || `UPI payment to ${payment.upiId}`
-        });
-        setTransaction(result);
-        setStep("success");
-      } catch (err) {
-        setError(/insufficient/i.test(err?.message || "") ? "Insufficient balance" : (err?.message || "Demo payment could not be completed."));
+    try {
+      const result = await sendMoney({
+        person: payment.name || payment.upiId,
+        recipientUpiId: payment.upiId || "",
+        amount,
+        note: note || `UPI payment to ${payment.upiId}`,
+        pin,
+      });
+
+      setTransaction(result);
+      setPin("");
+      setStep("success");
+    } catch (err) {
+      const code = err?.code || "";
+      const message = err?.message || "";
+
+      if (code === "INVALID_TRANSACTION_PIN" || code === "PIN_INVALID") {
+        setError("Incorrect Transaction PIN. Please try again.");
+        setPin("");
+        setStep("pin");
+      } else if (code === "PIN_LOCKED") {
+        const minutes = Math.max(
+          1,
+          Math.ceil(Number(err?.retryAfterSeconds || 900) / 60)
+        );
+        setError(`Transaction PIN is locked. Try again in ${minutes} minute(s).`);
+        setPin("");
+        setStep("pin");
+      } else if (code === "PIN_NOT_SET") {
+        setError("Transaction PIN is not set. Please set it before paying.");
+        setPin("");
+        setStep("pin");
+      } else if (code === "INSUFFICIENT_BALANCE" || /insufficient balance/i.test(message)) {
+        setError("Insufficient balance");
         setStep("failure");
-      } finally {
-        setProcessing(false);
+      } else {
+        setError(message || "Payment could not be completed. Check your connection and try again.");
+        setStep("failure");
       }
-    }, 850);
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -213,7 +241,7 @@ export default function UpiPage() {
 
           <section className="upi-demo-note">
             <CircleAlert size={17} />
-            <p><strong>Frontend demo</strong><span>QR scanning reads payment details only. It does not contact a bank or transfer real money.</span></p>
+            <p><strong>Scan to pay</strong><span>Scan a UPI QR code to securely read the payment details.</span></p>
           </section>
         </>
       )}
@@ -261,7 +289,7 @@ export default function UpiPage() {
             {payment.amount && <p className="upi-qr-amount">Amount suggested by QR: {formatMoney(payment.amount)}</p>}
             <label className="upi-note-label" htmlFor="upi-note">Payment note <span>Optional</span></label>
             <input id="upi-note" value={note} onChange={(event) => setNote(event.target.value)} maxLength={80} placeholder="What's this payment for?" />
-            <div className="upi-available-balance"><Wallet size={16} /><span>Demo balance</span><strong>{formatMoney(profile.balance)}</strong></div>
+            <div className="upi-available-balance"><Wallet size={16} /><span>Wallet balance</span><strong>{formatMoney(profile.balance)}</strong></div>
             {error && <p className="upi-form-error"><CircleAlert size={15} /> {error}</p>}
             <button className="primary-button full-button" type="submit">Review payment <ArrowRight size={17} /></button>
           </form>
@@ -274,46 +302,98 @@ export default function UpiPage() {
           <div className="upi-flow-progress"><span className="active" /><span className="active" /><span /></div>
           <span className="eyebrow">PAYMENT REVIEW</span>
           <h2>One last check</h2>
-          <p className="upi-flow-subtitle">Check the recipient and amount before confirming this demo payment.</p>
+          <p className="upi-flow-subtitle">Check the recipient and amount before continuing.</p>
           <div className="upi-review-amount">{formatMoney(amount)}<span>Payment amount</span></div>
           <div className="upi-review-list">
             <div><span>Paying to</span><strong>{payment.name}</strong></div>
             <div><span>UPI ID</span><strong>{payment.upiId}</strong></div>
-            <div><span>From</span><strong>{profile.bankLinked ? profile.bankName : "No linked account"}</strong></div>
+            <div><span>Payment source</span><strong>U-Pay wallet</strong></div>
             <div><span>Payment note</span><strong>{note || "—"}</strong></div>
-            <div><span>Payment type</span><strong>UPI · Demo</strong></div>
+            <div><span>Payment type</span><strong>UPI · Simulated</strong></div>
           </div>
-          <div className="upi-review-warning"><ShieldCheck size={17} /><span>In a real payment app, verify the payee and amount carefully. This demo won't contact your bank.</span></div>
+          <div className="upi-review-warning"><ShieldCheck size={17} /><span>Check the recipient and amount carefully before continuing. This flow records a simulated transaction; no real money is transferred.</span></div>
           {error && <p className="upi-form-error"><CircleAlert size={15} /> {error}</p>}
-          <button className="primary-button full-button" onClick={confirmPayment} disabled={processing}>{processing ? "Processing…" : "Confirm demo payment"} <CheckCircle2 size={17} /></button>
+          <button className="primary-button full-button" onClick={() => { setPin(""); setError(""); setStep("pin"); }} disabled={processing}>Continue to PIN <ArrowRight size={17} /></button>
+        </section>
+      )}
+
+      {step === "pin" && payment && (
+        <section className="upi-flow-card upi-authorize-card">
+          <button className="upi-back-link" type="button"
+            onClick={() => { setPin(""); setError(""); setStep("review"); }}>
+            <ArrowLeft size={16} /> Back to review
+          </button>
+          <div className="upi-flow-progress"><span className="active" /><span className="active" /><span className="active" /></div>
+          <div className="upi-auth-icon"><ShieldCheck size={30} /></div>
+          <span className="eyebrow">PAYMENT AUTHORIZATION</span>
+          <h2>Enter Transaction PIN</h2>
+          <p className="upi-flow-subtitle">
+            Authorize this payment to {payment.name || payment.upiId}.
+          </p>
+          <div className="upi-auth-payee">
+            <Wallet size={18} />
+            <span>{formatMoney(amount)} · U-Pay wallet</span>
+          </div>
+          <form onSubmit={confirmPayment} noValidate>
+            <label className="upi-pin-label" htmlFor="upi-transaction-pin">
+              <ShieldCheck size={15} /> Transaction PIN
+            </label>
+            <input
+              id="upi-transaction-pin"
+              className="upi-pin-input"
+              type="password"
+              inputMode="numeric"
+              autoComplete="off"
+              pattern="[0-9]{4,6}"
+              minLength={4}
+              maxLength={6}
+              value={pin}
+              onChange={(event) => {
+                setPin(event.target.value.replace(/\D/g, "").slice(0, 6));
+                setError("");
+              }}
+              placeholder="••••"
+              aria-label="4 to 6 digit Transaction PIN"
+              disabled={processing}
+              autoFocus
+            />
+            {error && <p className="upi-form-error" role="alert"><CircleAlert size={15} /> {error}</p>}
+            <p className="upi-demo-disclaimer">
+              <ShieldCheck size={13} /> Simulated authorization only. No money will be transferred.
+            </p>
+            <button className="primary-button full-button" type="submit" disabled={processing}>
+              {processing ? "Processing payment…" : "Authorize payment"}
+              {!processing && <CheckCircle2 size={17} />}
+            </button>
+          </form>
         </section>
       )}
 
       {step === "processing" && (
         <section className="upi-result-card">
           <div className="upi-processing-spinner" />
-          <h2>Processing demo payment</h2>
-          <p>Updating the local demo wallet. No bank connection is being made.</p>
+          <h2>Processing payment</h2>
+          <p>Recording your transaction. No bank connection is being made.</p>
         </section>
       )}
 
       {(step === "success" || step === "failure") && (
         <section className={`upi-result-card ${step === "success" ? "is-success" : "is-failure"}`}>
           {step === "success" ? <CheckCircle2 size={57} /> : <CircleAlert size={57} />}
-          <span className="eyebrow">{step === "success" ? "DEMO PAYMENT COMPLETE" : "PAYMENT NOT COMPLETED"}</span>
+          <span className="eyebrow">{step === "success" ? "PAYMENT RECORDED" : "PAYMENT NOT COMPLETED"}</span>
           <h2>{step === "success" ? `${formatMoney(transaction?.amount || amount)} sent` : "Couldn't complete payment"}</h2>
-          <p>{step === "success" ? `A demo transaction was recorded for ${payment?.name || "your recipient"}.` : error || "Please review your details and try again."}</p>
+          <p>{step === "success" ? `A transaction record was created for ${payment?.name || "your recipient"}.` : error || "Please review your details and try again."}</p>
           {step === "success" && transaction && (
             <div className="upi-receipt">
               <div><span>Recipient</span><strong>{payment.name}</strong></div>
               <div><span>UPI ID</span><strong>{payment.upiId}</strong></div>
-              <div><span>Demo transaction ID</span><strong>{transaction.id}</strong></div>
+              <div><span>Transaction ID</span><strong>{transaction.id}</strong></div>
               <div><span>Status</span><strong className="upi-receipt-status">Simulated</strong></div>
             </div>
           )}
-          {step === "failure" && <button className="secondary-button full-button" onClick={() => setStep("review")}>Review and try again</button>}
+          {step === "failure" && <button className="secondary-button full-button" onClick={() => { setError(""); setPin(""); setStep("pin"); }}>Try payment again</button>}
           <button className="primary-button full-button" onClick={resetFlow}>{step === "success" ? "Done" : "Back to scanner"} <ArrowRight size={17} /></button>
-          {step === "success" && <p className="upi-demo-disclaimer"><CreditCard size={13} /> This receipt is for a local frontend simulation only.</p>}
+          {step === "success" && <p className="upi-demo-disclaimer"><CreditCard size={13} /> Simulated transaction only. No real money was transferred.</p>}
         </section>
       )}
 

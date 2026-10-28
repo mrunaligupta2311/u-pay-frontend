@@ -1,115 +1,308 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { useAuth } from "./AuthContext";
 
 const WalletContext = createContext(null);
-const STORAGE_KEY = "upay-demo-wallet-v2";
 
-function readState() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) return JSON.parse(saved);
-  } catch (error) {
-    console.warn("Could not read demo wallet state", error);
-  }
-  return {
-    profile: {
-      name: "",
-      phone: "",
-      email: "",
-      upiId: "",
-      bankName: "",
-      balance: 0,
-      bankLinked: false
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:4000"
+).replace(/\/+$/, "");
+
+const EMPTY_WALLET = {
+  profile: {
+    id: "",
+    name: "",
+    phone: "",
+    email: "",
+    upiId: "",
+    balance: 0,
+    currency: "INR",
+  },
+  transactions: [],
+};
+
+async function walletRequest(path, token, options = {}) {
+  const response = await fetch(`${API_BASE_URL}/api/wallet${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      "x-session-token": token,
+      ...(options.headers || {}),
     },
-    transactions: []
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const error = new Error(
+      data?.error?.message || "Could not communicate with your wallet."
+    );
+
+    error.code = data?.error?.code || "WALLET_REQUEST_FAILED";
+    error.status = response.status;
+    error.retryAfterSeconds = data?.error?.retryAfterSeconds;
+
+    throw error;
+  }
+
+  return data;
+}
+
+function normalizeTransaction(transaction) {
+  return {
+    ...transaction,
+    id: transaction.id || transaction.reference,
+    person:
+      transaction.person ||
+      transaction.recipientName ||
+      "UPI payment",
+    amount: Number(transaction.amount || 0),
+    type: transaction.type || "sent",
+    date: transaction.date || new Date().toISOString(),
+    note: transaction.note || "",
+  };
+}
+
+function normalizeProfile(profile) {
+  return {
+    id: profile.id || "",
+    name: profile.name || "",
+    phone: profile.phone || "",
+    email: profile.email || "",
+    upiId: profile.upiId || "",
+    balance: Number(profile.balance || 0),
+    currency: profile.currency || "INR",
   };
 }
 
 export function WalletProvider({ children }) {
-  const [wallet, setWallet] = useState(readState);
+  const { user, sessionToken } = useAuth();
+
+  const [wallet, setWallet] = useState(EMPTY_WALLET);
+  const [isLoading, setIsLoading] = useState(false);
+  const [walletError, setWalletError] = useState("");
+
+  const refreshWallet = useCallback(async () => {
+    if (!sessionToken || !user?.id) {
+      setWallet(EMPTY_WALLET);
+      setWalletError("");
+      return null;
+    }
+
+    setIsLoading(true);
+    setWalletError("");
+
+    try {
+      const [walletData, transactionData] = await Promise.all([
+        walletRequest("/", sessionToken),
+        walletRequest("/transactions?limit=100", sessionToken),
+      ]);
+
+      const nextWallet = {
+        profile: normalizeProfile(walletData.profile),
+        transactions: Array.isArray(transactionData.transactions)
+          ? transactionData.transactions.map(normalizeTransaction)
+          : [],
+      };
+
+      setWallet(nextWallet);
+      return nextWallet;
+    } catch (error) {
+      setWalletError(error.message || "Could not load your wallet.");
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [sessionToken, user?.id]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(wallet));
-  }, [wallet]);
+    let active = true;
 
-  const updateProfile = (updates) => setWallet((current) => ({
-    ...current,
-    profile: { ...current.profile, ...updates }
-  }));
-
-  const sendMoney = ({ person, amount, note = "" }) => {
-    const value = Number(amount);
-    if (!person?.trim()) throw new Error("Enter a recipient name or UPI ID.");
-    if (!Number.isFinite(value) || value <= 0) throw new Error("Enter a valid amount.");
-    if (!wallet.profile.bankLinked) throw new Error("Add a bank account before sending money.");
-    if (value > wallet.profile.balance) throw new Error("Insufficient balance");
-    const transaction = {
-      id: `tx-${Date.now()}`,
-      person: person.trim(),
-      amount: value,
-      type: "sent",
-      date: new Date().toISOString(),
-      note: note.trim() || "Sent via UPI"
-    };
-    setWallet((current) => ({
-      profile: { ...current.profile, balance: current.profile.balance - value },
-      transactions: [transaction, ...current.transactions]
-    }));
-    return transaction;
-  };
-
-  const addDemoFunds = (amount) => {
-    const value = Number(amount);
-    if (!Number.isFinite(value) || value <= 0 || value > 100000) {
-      throw new Error("Enter demo funds between ₹1 and ₹1,00,000.");
+    if (!sessionToken || !user?.id) {
+      setWallet(EMPTY_WALLET);
+      setWalletError("");
+      setIsLoading(false);
+      return undefined;
     }
+
+    setIsLoading(true);
+    setWalletError("");
+
+    Promise.all([
+      walletRequest("/", sessionToken),
+      walletRequest("/transactions?limit=100", sessionToken),
+    ])
+      .then(([walletData, transactionData]) => {
+        if (!active) return;
+
+        setWallet({
+          profile: normalizeProfile(walletData.profile),
+          transactions: Array.isArray(transactionData.transactions)
+            ? transactionData.transactions.map(normalizeTransaction)
+            : [],
+        });
+      })
+      .catch((error) => {
+        if (!active) return;
+        setWalletError(error.message || "Could not load your wallet.");
+      })
+      .finally(() => {
+        if (active) setIsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [sessionToken, user?.id]);
+
+  const updateProfile = useCallback((updates) => {
     setWallet((current) => ({
       ...current,
-      profile: { ...current.profile, balance: Number(current.profile.balance || 0) + value }
-    }));
-  };
-
-  const resetDemo = () => setWallet({
-    profile: {
-      name: "",
-      phone: "",
-      email: "",
-      upiId: "",
-      bankName: "",
-      balance: 0,
-      bankLinked: false
-    },
-    transactions: []
-  });
-
-  const startNewDemoAccount = ({ name, phone, email }) => {
-    const slug = String(name || "user")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "")
-      .slice(0, 18) || "user";
-
-    setWallet({
       profile: {
-        name,
-        phone,
-        email,
-        upiId: `${slug}@upay.demo`,
-        bankName: "",
-        balance: 0,
-        bankLinked: false
+        ...current.profile,
+        ...updates,
       },
-      transactions: []
-    });
-  };
+    }));
+  }, []);
 
-  const value = useMemo(() => ({
-    ...wallet, updateProfile, sendMoney, resetDemo, startNewDemoAccount, addDemoFunds
-  }), [wallet]);
+  const sendMoney = useCallback(
+    async ({
+      person,
+      amount,
+      note = "",
+      recipientUpiId = "",
+      pin = "",
+      idempotencyKey,
+    }) => {
+      const recipientName = String(person || "").trim();
+      const value = Number(amount);
 
-  return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
+      if (!recipientName) {
+        throw new Error("Enter a recipient name or UPI ID.");
+      }
+
+      if (!Number.isFinite(value) || value <= 0) {
+        throw new Error("Enter a valid amount.");
+      }
+
+      if (!sessionToken || !user?.id) {
+        throw new Error("Please sign in to make a demo payment.");
+      }
+
+      if (!/^\d{4,6}$/.test(String(pin))) {
+        throw new Error("Enter your 4–6 digit Transaction PIN.");
+      }
+
+      const result = await walletRequest("/payments", sessionToken, {
+        method: "POST",
+        headers: idempotencyKey
+          ? { "x-idempotency-key": idempotencyKey }
+          : {},
+        body: JSON.stringify({
+          recipientName,
+          recipientUpiId: String(recipientUpiId || "").trim() || undefined,
+          amount: value,
+          note: String(note || "").trim(),
+          pin: String(pin),
+          idempotencyKey,
+        }),
+      });
+
+      await refreshWallet();
+
+      return normalizeTransaction(result.transaction);
+    },
+    [sessionToken, user?.id, refreshWallet]
+  );
+
+  const addDemoFunds = useCallback(
+    async (amount) => {
+      const value = Number(amount);
+
+      if (!Number.isFinite(value) || value < 1 || value > 100000) {
+        throw new Error("Enter demo funds between ₹1 and ₹1,00,000.");
+      }
+
+      if (!sessionToken || !user?.id) {
+        throw new Error("Please sign in to access your wallet.");
+      }
+
+      const result = await walletRequest("/demo-funds", sessionToken, {
+        method: "POST",
+        body: JSON.stringify({ amount: value }),
+      });
+
+      await refreshWallet();
+
+      return result.transaction
+        ? normalizeTransaction(result.transaction)
+        : null;
+    },
+    [sessionToken, user?.id, refreshWallet]
+  );
+
+  const startNewDemoAccount = useCallback(({ name, phone, email }) => {
+    // Temporary display state only. The server remains the source of truth.
+    setWallet((current) => ({
+      ...current,
+      profile: {
+        ...current.profile,
+        name: String(name || "").trim(),
+        phone: String(phone || ""),
+        email: String(email || "").trim().toLowerCase(),
+      },
+    }));
+  }, []);
+
+  const resetDemo = useCallback(async () => {
+    // Never reset a server-backed wallet from the browser.
+    await refreshWallet();
+  }, [refreshWallet]);
+
+  const value = useMemo(
+    () => ({
+      ...wallet,
+      isLoading,
+      walletError,
+      refreshWallet,
+      updateProfile,
+      sendMoney,
+      addDemoFunds,
+      startNewDemoAccount,
+      resetDemo,
+    }),
+    [
+      wallet,
+      isLoading,
+      walletError,
+      refreshWallet,
+      updateProfile,
+      sendMoney,
+      addDemoFunds,
+      startNewDemoAccount,
+      resetDemo,
+    ]
+  );
+
+  return (
+    <WalletContext.Provider value={value}>
+      {children}
+    </WalletContext.Provider>
+  );
 }
 
 export function useWallet() {
   const context = useContext(WalletContext);
-  if (!context) throw new Error("useWallet must be used inside WalletProvider");
+
+  if (!context) {
+    throw new Error("useWallet must be used inside WalletProvider.");
+  }
+
   return context;
 }

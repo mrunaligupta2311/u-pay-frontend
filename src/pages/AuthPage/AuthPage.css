@@ -1209,3 +1209,63 @@ select.onboarding-text-input {
   transition: background-color 9999s ease-out 0s;
   box-shadow: 0 0 0 1000px #ffffff inset !important;
 }
+
+
+/* Login / registration switch */
+.onboarding-auth-switch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 20px;
+  color: var(--auth-muted, #8993a7);
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.onboarding-auth-switch button {
+  padding: 2px 0;
+  color: var(--auth-blue, #3155e7);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.onboarding-auth-switch button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.onboarding-auth-switch button:focus-visible {
+  outline: 2px solid var(--auth-blue, #3155e7);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* PIN recovery screens */
+.onboarding-card select.onboarding-text-input {
+  min-height: 52px;
+  padding: 0 13px;
+  border: 1px solid #dce2ee;
+  border-radius: 13px;
+  background-color: #fff;
+  color: var(--auth-ink);
+  font: inherit;
+  font-size: 12px;
+}
+
+.onboarding-card select.onboarding-text-input:focus {
+  border-color: var(--auth-blue);
+  box-shadow: 0 0 0 4px #3155e712;
+  outline: none;
+}
+
+.onboarding-card .onboarding-back {
+  align-self: flex-start;
+}
+
+.onboarding-card .onboarding-form .onboarding-primary {
+  width: 100%;
+}

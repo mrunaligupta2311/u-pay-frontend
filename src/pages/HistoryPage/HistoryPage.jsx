@@ -39,6 +39,6 @@ export default function HistoryPage() {
     <section className="history-list-card">
       {filtered.length ? filtered.map((transaction, index) => <TransactionItem key={transaction.id} transaction={transaction} index={index} />) : <div className="history-empty"><span><CalendarDays size={24}/></span><strong>No transactions found</strong><p>Try changing your search or filters.</p><button onClick={() => {setSearch("");setType("all");setDate("");}}>Clear all filters</button></div>}
     </section>
-    <p className="history-disclaimer">Demo transaction history is saved in this browser only.</p>
+    <p className="history-disclaimer">Transaction history is saved in this browser only.</p>
   </div>;
 }

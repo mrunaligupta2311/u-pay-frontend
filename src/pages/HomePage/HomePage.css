@@ -38,7 +38,7 @@
 @media(max-width:520px){.person-detail-backdrop{align-items:flex-end;padding:0}.person-detail-modal{width:100%;max-height:88dvh;border-radius:25px 25px 0 0}.person-detail-header{padding:15px 18px}.person-detail-transactions{padding:0 17px 18px}}
 
 
-/* Person payment-history screen: polished, GPay-inspired contact view */
+/* Person payment-history screen: polished, U-Pay-inspired contact view */
 .person-detail-backdrop {
   padding: 20px;
   overflow-y: auto;

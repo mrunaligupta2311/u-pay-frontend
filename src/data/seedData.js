@@ -2,9 +2,7 @@ export const initialProfile = {
   name: "Mrunali Gupta",
   phone: "7359808797",
   upiId: "mrunaligupta2311@bank.com",
-  bankName: "Bank of Baroda",
   balance: 500003,
-  bankLinked: true
 };
 
 const today = new Date();
