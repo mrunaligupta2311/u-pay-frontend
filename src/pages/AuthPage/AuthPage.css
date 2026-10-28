@@ -1269,3 +1269,365 @@ select.onboarding-text-input {
 .onboarding-card .onboarding-form .onboarding-primary {
   width: 100%;
 }
+
+/* =========================================================
+   U-PAY AUTH FINISHING PASS
+   Visual-only overrides. Authentication logic is untouched.
+   ========================================================= */
+
+.onboarding-page {
+  --auth-pink: #e84d91;
+  --auth-pink-soft: #fff0f6;
+  background:
+    radial-gradient(
+      ellipse at 92% 12%,
+      rgb(255 226 239 / 64%) 0,
+      transparent 29%
+    ),
+    radial-gradient(
+      ellipse at 7% 42%,
+      rgb(229 236 255 / 86%) 0,
+      transparent 36%
+    ),
+    #fcfdff;
+  overflow-x: clip;
+}
+
+.onboarding-header {
+  min-height: 82px;
+}
+
+.onboarding-brand {
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.onboarding-brand:hover {
+  opacity: .88;
+}
+
+.onboarding-brand-mark {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #fff 20%, #edf1ff 100%);
+}
+
+.onboarding-brand-mark span {
+  color: var(--auth-pink);
+}
+
+.onboarding-eyebrow {
+  color: var(--auth-blue);
+}
+
+.onboarding-eyebrow::before {
+  background: linear-gradient(
+    90deg,
+    var(--auth-blue),
+    var(--auth-pink)
+  );
+}
+
+.onboarding-intro h1 span {
+  color: transparent;
+  background: linear-gradient(
+    100deg,
+    var(--auth-blue) 4%,
+    #6b5ee9 58%,
+    var(--auth-pink) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.onboarding-intro-icon {
+  background:
+    radial-gradient(circle at 100% 0%, #ffe5f0 0, transparent 55%),
+    linear-gradient(145deg, #fff, #e8eeff);
+}
+
+.onboarding-feature-icon {
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.onboarding-feature-list > div:hover .onboarding-feature-icon {
+  transform: translateY(-2px);
+  border-color: #d9dfff;
+  box-shadow: 0 7px 18px rgb(49 85 231 / 9%);
+}
+
+.onboarding-card {
+  border-color: #e7eaf3;
+  box-shadow:
+    0 28px 75px rgb(35 48 89 / 8%),
+    0 5px 18px rgb(35 48 89 / 4%);
+}
+
+.onboarding-card-icon {
+  background:
+    radial-gradient(circle at 100% 0%, #ffe6f0 0, transparent 58%),
+    linear-gradient(145deg, #f7f8ff, #e9efff);
+}
+
+.onboarding-progress span.active {
+  background: linear-gradient(90deg, var(--auth-blue), #8a64ec);
+}
+
+.onboarding-form > label {
+  line-height: 1.5;
+}
+
+.onboarding-text-input,
+.onboarding-otp-input,
+.onboarding-phone-input {
+  box-sizing: border-box;
+}
+
+.onboarding-text-input:hover,
+.onboarding-otp-input:hover {
+  border-color: #c8d0e3;
+}
+
+.onboarding-text-input:focus,
+.onboarding-otp-input:focus,
+.onboarding-phone-input:focus-within {
+  outline: none;
+  border-color: var(--auth-blue);
+  box-shadow: 0 0 0 4px rgb(49 85 231 / 9%);
+}
+
+.onboarding-text-input:focus-visible,
+.onboarding-otp-input:focus-visible {
+  outline: none;
+}
+
+.onboarding-text-input:disabled,
+.onboarding-otp-input:disabled {
+  background: #f6f7fb;
+  cursor: not-allowed;
+}
+
+.onboarding-primary {
+  background: linear-gradient(
+    105deg,
+    #3155e7 0%,
+    #4b51df 62%,
+    #7650dc 100%
+  );
+  box-shadow: 0 8px 19px rgb(49 85 231 / 20%);
+}
+
+.onboarding-primary:hover:not(:disabled) {
+  background: linear-gradient(
+    105deg,
+    #2949d3 0%,
+    #4145d0 62%,
+    #6942cf 100%
+  );
+  box-shadow: 0 11px 24px rgb(49 85 231 / 25%);
+}
+
+.onboarding-primary:disabled {
+  box-shadow: none;
+}
+
+.onboarding-auth-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px 7px;
+  margin-top: 22px;
+  color: #7b8499;
+  font-size: 11px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.onboarding-auth-switch button {
+  padding: 3px 2px;
+  border: 0;
+  background: transparent;
+  color: var(--auth-blue);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+
+.onboarding-auth-switch button:hover:not(:disabled) {
+  color: var(--auth-pink);
+}
+
+.onboarding-auth-switch button:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+
+.onboarding-back:focus-visible,
+.onboarding-auth-switch button:focus-visible {
+  outline: 3px solid rgb(49 85 231 / 24%);
+  outline-offset: 4px;
+  border-radius: 5px;
+}
+
+.onboarding-demo-code {
+  border-color: #e1e3ff;
+  background:
+    radial-gradient(circle at 100% 0%, #ffe6f1 0, transparent 45%),
+    linear-gradient(135deg, #f7f8ff, #f9f7ff);
+}
+
+.onboarding-demo-code > strong {
+  color: var(--auth-blue);
+}
+
+.onboarding-bank-notice {
+  border-color: #e1efe8;
+}
+
+.onboarding-disclaimer {
+  font-size: 10px;
+}
+
+.onboarding-footer {
+  min-height: 58px;
+}
+
+.onboarding-footer span:first-child {
+  color: var(--auth-blue);
+  letter-spacing: -.2px;
+}
+
+/* Tablet and mobile refinements */
+
+@media (max-width: 800px) {
+  .onboarding-layout {
+    gap: 30px;
+    min-height: auto;
+    padding: 40px 0 45px;
+  }
+
+  .onboarding-intro {
+    max-width: 500px;
+    margin-inline: auto;
+  }
+
+  .onboarding-intro-icon {
+    margin-bottom: 20px;
+  }
+
+  .onboarding-intro h1 {
+    margin-block: 14px;
+    font-size: clamp(36px, 7vw, 48px);
+    letter-spacing: -2px;
+  }
+
+  .onboarding-intro > p {
+    max-width: 410px;
+  }
+
+  .onboarding-card {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .onboarding-page {
+    padding-inline: 16px;
+  }
+
+  .onboarding-header {
+    min-height: 68px;
+  }
+
+  .onboarding-secure-label {
+    gap: 6px;
+    padding: 8px 10px;
+    font-size: 9px;
+  }
+
+  .onboarding-layout {
+    padding-block: 29px 34px;
+  }
+
+  .onboarding-intro-icon {
+    width: 49px;
+    height: 49px;
+    border-radius: 16px;
+  }
+
+  .onboarding-intro h1 {
+    font-size: clamp(34px, 9vw, 42px);
+    line-height: 1.12;
+    letter-spacing: -1.7px;
+  }
+
+  .onboarding-intro > p {
+    font-size: 12px;
+    line-height: 1.75;
+  }
+
+  .onboarding-card {
+    padding: 23px 18px;
+    border-radius: 21px;
+  }
+
+  .onboarding-step-label {
+    margin-bottom: 22px;
+  }
+
+  .onboarding-description {
+    margin-bottom: 21px;
+  }
+
+  .onboarding-primary {
+    min-height: 51px;
+  }
+
+  .onboarding-disclaimer {
+    margin-top: 21px;
+    padding-top: 16px;
+    font-size: 9px;
+  }
+
+  .onboarding-footer {
+    min-height: 51px;
+  }
+}
+
+@media (max-width: 350px) {
+  .onboarding-page {
+    padding-inline: 12px;
+  }
+
+  .onboarding-secure-label {
+    padding: 7px 8px;
+    font-size: 8px;
+  }
+
+  .onboarding-card {
+    padding-inline: 15px;
+  }
+
+  .onboarding-intro h1 {
+    font-size: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-card {
+    animation: none;
+  }
+
+  .onboarding-page *,
+  .onboarding-page *::before,
+  .onboarding-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
